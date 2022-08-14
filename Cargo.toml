@@ -1,0 +1,17 @@
+[package]
+name = "path-rendering"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+image = "0.23.14"
+imgui = { git = "https://github.com/imgui-rs/imgui-rs.git", rev = "22436d93412e8dbc0dc28b74a5d3b42831468e9f" }
+# gl = "0.14.0"
+glam = "0.20.2"
+# optick = "1.3.4"
+
+
+[dependencies.glfw]
+git = "https://github.com/bjz/glfw-rs.git"
