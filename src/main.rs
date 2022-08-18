@@ -67,8 +67,8 @@ fn main() {
         path.line_to(Vec2::new(600.0, 100.0));
         // path_builder.line_to(Vec2::new(100.0, 100.0));
         // path_builder.curve_to(Vec2::new(100.0, 600.0), Vec2::new(600.0, 600.0));
-        path.move_to(Vec2::new(600.0, 600.0));
-        path.quadratic_curve_to(Vec2::new(100.0, 600.0), Vec2::new(100.0, 100.0));
+        // path.move_to(Vec2::new(600.0, 600.0));
+        // path.quadratic_curve_to(Vec2::new(100.0, 600.0), Vec2::new(100.0, 100.0));
 
         path.close_subpath();
 

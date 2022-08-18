@@ -7,6 +7,7 @@ use super::generated_gl as gl;
 pub struct Renderer {
     pub(crate) triangle_program: gl::types::GLuint,
     pub(crate) curve_program: gl::types::GLuint,
+    pub(crate) quad_curve_stroke_program: gl::types::GLuint,
 }
 
 impl Renderer {
@@ -20,14 +21,20 @@ impl Renderer {
             include_str!("../../data/shaders/curve.frag"),
         );
 
+        let quad_curve_stroke_program = create_program(
+            include_str!("../../data/shaders/quad_curve_stroke.vert"),
+            include_str!("../../data/shaders/quad_curve_stroke.frag"),
+        );
+
         Self {
             triangle_program,
             curve_program,
+            quad_curve_stroke_program,
         }
     }
 
     pub fn draw_path(&self, path_painter: &mut PathPainter) {
-        path_painter.draw(&self);
+        path_painter.draw_sroke(&self);
     }
 }
 

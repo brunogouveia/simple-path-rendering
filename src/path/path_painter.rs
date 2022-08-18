@@ -91,6 +91,19 @@ impl PathPainter {
             check_log_error();
         }
     }
+
+    pub fn draw_sroke(&mut self, renderer: &Renderer) {
+        unsafe {
+            gl::UseProgram(renderer.quad_curve_stroke_program);
+            check_log_error();
+
+            self.base_mesh.bind();
+            check_log_error();
+
+            gl::DrawArrays(gl::TRIANGLES, 0, self.base_mesh.size());
+            check_log_error();
+        }
+    }
 }
 
 fn check_log_error() {
