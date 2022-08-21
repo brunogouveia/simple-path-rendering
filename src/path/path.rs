@@ -1,10 +1,14 @@
 use glam::Vec2;
 
-#[derive(Default, Debug)]
+use super::primitives::{Line, QuadCurve};
+
+#[derive(Clone, Default, Debug)]
 pub struct SubPath {
     pub(crate) current_point: Vec2,
     pub(crate) points: Vec<Vec2>,
-    pub(crate) curve_points: Vec<Vec2>,
+    // pub(crate) curve_points: Vec<Vec2>,
+    pub(crate) lines: Vec<Line>,
+    pub(crate) quad_curves: Vec<QuadCurve>,
     pub(crate) closed: bool,
 }
 
@@ -14,14 +18,15 @@ impl SubPath {
     }
 
     pub fn line_to(&mut self, p: Vec2) {
+        self.lines.push(Line::new(self.current_point, p));
+
         self.points.push(p);
         self.current_point = p;
     }
 
     pub fn quadratic_curve_to(&mut self, c: Vec2, p: Vec2) {
-        self.curve_points.push(self.current_point);
-        self.curve_points.push(c);
-        self.curve_points.push(p);
+        self.quad_curves
+            .push(QuadCurve::new(self.current_point, c, p));
 
         self.points.push(p);
         self.current_point = p;
@@ -32,7 +37,7 @@ impl SubPath {
     }
 }
 
-#[derive(Default, Debug)]
+#[derive(Clone, Default, Debug)]
 pub struct Path {
     pub(crate) current_origin: Vec2,
     pub(crate) sub_paths: Vec<SubPath>,

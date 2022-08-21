@@ -33,8 +33,8 @@ impl Renderer {
         }
     }
 
-    pub fn draw_path(&self, path_painter: &mut PathPainter) {
-        path_painter.draw_sroke(&self);
+    pub fn draw_path(&self, path_painter: &mut impl PathPainter) {
+        path_painter.draw(&self);
     }
 }
 

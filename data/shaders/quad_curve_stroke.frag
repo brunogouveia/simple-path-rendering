@@ -1,5 +1,11 @@
 #version 410 core
 
+uniform vec2 c0;
+uniform vec2 c1;
+uniform vec2 c2;
+uniform vec4 color;
+uniform float width;
+
 // In
 layout (location = 0) in vec2 p;
 layout (location = 1) in float B_term;
@@ -34,10 +40,6 @@ int solveCubic(in float a, in float b, in float c, in float d, out vec3 roots) {
 }
 
 vec2 q(float t) {
-    vec2 c0 = vec2(100, 100);
-    vec2 c1 = vec2(100, 600);
-    vec2 c2 = vec2(600, 600);
-
     return t * t * (c0 - 2 * c1 + c2) + t * (-2 * c0 + 2 * c1) + c0;
 }
 
@@ -51,11 +53,18 @@ void main() {
 
         vec2 point = q(firstRoot);
 
-        if (firstRoot >= 0 && firstRoot <= 1 && distance(point, p) < 5) {
-            out_color = vec4(1);        
+        if (firstRoot >= 0 && firstRoot <= 1) {
+            float d = smoothstep(width - 1, width + 1, abs(distance(point, p)));
+            float alpha = color.a * (1 - d);
+            
+            if (alpha <= 0) {
+                discard;
+            }
+
+            out_color = vec4(color.rgb, color.a * (1 - d));
             return;
         }
     }
 
-    out_color = vec4(1, 0, 0, 1);
+    discard;
 }

@@ -6,7 +6,7 @@ use super::generated_gl as gl;
 pub struct Mesh {
     vertex_array_object_name: gl::types::GLuint,
     buffer_name: gl::types::GLuint,
-    vertices: Vec<Vec2>,
+    pub(crate) vertices: Vec<Vec2>,
 }
 
 impl Mesh {

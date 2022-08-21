@@ -1,6 +1,6 @@
 mod path;
 
-use path::generated_gl as gl;
+use path::{generated_gl as gl, path_painter::StrokePathPainter};
 
 use glam::Vec2;
 // use glft;
@@ -65,13 +65,26 @@ fn main() {
         path.line_to(Vec2::new(100.0, 600.0));
         path.line_to(Vec2::new(600.0, 600.0));
         path.line_to(Vec2::new(600.0, 100.0));
-        // path_builder.line_to(Vec2::new(100.0, 100.0));
-        // path_builder.curve_to(Vec2::new(100.0, 600.0), Vec2::new(600.0, 600.0));
+
+        path.move_to(Vec2::new(600.0, 600.0));
+        path.quadratic_curve_to(Vec2::new(100.0, 600.0), Vec2::new(100.0, 100.0));
         // path.move_to(Vec2::new(600.0, 600.0));
         // path.quadratic_curve_to(Vec2::new(100.0, 600.0), Vec2::new(100.0, 100.0));
 
         path.close_subpath();
 
+        let mut stroke_path_painter = StrokePathPainter::new(path.clone(), 5.0);
+
+        // let mut path = Path::new();
+        // path.line_to(Vec2::new(100.0, 100.0));
+        // path.line_to(Vec2::new(100.0, 600.0));
+        // path.line_to(Vec2::new(600.0, 600.0));
+        // path.close_subpath();
+
+        // path.move_to(Vec2::new(600.0, 600.0));
+        // path.curve_to(Vec2::new(220.0, 150.0), Vec2::new(100.0, 100.0));
+        // path.curve_to(Vec2::new(20.0, 150.0), Vec2::new(100.0, 200.0));
+        // path.close_subpath();
         let mut path_painter = PathPainter::new(path);
 
         gl::ClearColor(0.0, 0.0, 0.0, 1.0);
@@ -95,6 +108,7 @@ fn main() {
 
             gl::Clear(gl::COLOR_BUFFER_BIT | gl::DEPTH_BUFFER_BIT | gl::STENCIL_BUFFER_BIT);
 
+            // renderer.draw_path(&mut stroke_path_painter);
             renderer.draw_path(&mut path_painter);
 
             window.swap_buffers()

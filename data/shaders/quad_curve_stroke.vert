@@ -1,5 +1,11 @@
 #version 410 core
 
+uniform vec2 c0;
+uniform vec2 c1;
+uniform vec2 c2;
+uniform vec4 color;
+uniform float width;
+
 // In
 layout (location = 0) in vec2 position;
 
@@ -8,13 +14,6 @@ layout (location = 0) out vec2 p;
 layout (location = 1) out float B_term;
 layout (location = 2) out float C_term;
 layout (location = 3) out float D_term;
-
-const vec2 uv[3] = vec2[3]( 
-    vec2(0.0, 0.0),
-    vec2(0.5, 0.0),
-    vec2(1.0, 1.0)
-);
-
 
 float computeBTerm(vec2 A, vec2 B, vec2 C, vec2 p) {
     return 3 * (A.x * B.x + A.y * B.y);
@@ -29,10 +28,6 @@ float computeDTerm(vec2 A, vec2 B, vec2 C, vec2 p) {
 }
 
 void main() {
-    vec2 c0 = vec2(100, 100);
-    vec2 c1 = vec2(100, 600);
-    vec2 c2 = vec2(600, 600);
-
     vec2 A = c0 - 2*c1 + c2;
     vec2 B = -2 * c0 + 2 * c1;
     vec2 C = c0;
