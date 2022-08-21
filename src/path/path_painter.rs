@@ -169,6 +169,8 @@ impl StrokePathPainter {
 impl PathPainter for StrokePathPainter {
     fn draw(&mut self, renderer: &Renderer) {
         unsafe {
+            gl::Disable(gl::STENCIL_TEST);
+
             gl::UseProgram(renderer.quad_curve_stroke_program);
             check_log_error();
 
