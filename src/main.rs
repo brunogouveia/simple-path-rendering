@@ -8,7 +8,7 @@ use glfw::{
     Action, Context, Key, OpenGlProfileHint, SwapInterval, Window, WindowEvent, WindowHint,
     WindowMode,
 };
-use path::{path::Path, path_painter::PathPainter, renderer::Renderer};
+use path::{path::Path, path_painter::FillPathPainter, renderer::Renderer};
 
 // use optick;
 
@@ -19,6 +19,7 @@ fn main() {
     glfw.window_hint(WindowHint::ContextVersionMinor(1));
     glfw.window_hint(WindowHint::OpenGlProfile(OpenGlProfileHint::Core));
     glfw.window_hint(WindowHint::OpenGlForwardCompat(true));
+    glfw.window_hint(WindowHint::Samples(Some(8)));
 
     let (mut window, event_receiver) = glfw
         .create_window(1024, 768, "Simple example", WindowMode::Windowed)
@@ -85,7 +86,7 @@ fn main() {
         // path.curve_to(Vec2::new(220.0, 150.0), Vec2::new(100.0, 100.0));
         // path.curve_to(Vec2::new(20.0, 150.0), Vec2::new(100.0, 200.0));
         // path.close_subpath();
-        let mut path_painter = PathPainter::new(path);
+        let mut path_painter = FillPathPainter::new(path);
 
         gl::ClearColor(0.0, 0.0, 0.0, 1.0);
         gl::Enable(gl::STENCIL_TEST);
@@ -94,6 +95,10 @@ fn main() {
 
         gl::DepthFunc(gl::ALWAYS);
         gl::StencilFunc(gl::ALWAYS, 1, 0xFF);
+
+        gl::Enable(gl::MULTISAMPLE);
+        gl::Enable(gl::SAMPLE_SHADING);
+        gl::MinSampleShading(1.0);
 
         while !window.should_close() {
             {
