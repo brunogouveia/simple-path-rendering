@@ -1,3 +1,5 @@
+use std::ffi::CString;
+
 use glam::Vec2;
 
 use super::mesh::Mesh;
@@ -52,8 +54,8 @@ impl PathPainter for FillPathPainter {
             gl::StencilFuncSeparate(gl::BACK, gl::ALWAYS, 0, 0);
             // gl::StencilMask(0xFF);
             // gl::StencilOp(gl::INCR, gl::INCR, gl::INCR);
-            gl::StencilOpSeparate(gl::FRONT, gl::DECR, gl::DECR, gl::DECR);
-            gl::StencilOpSeparate(gl::BACK, gl::INCR, gl::INCR, gl::INCR);
+            gl::StencilOpSeparate(gl::FRONT, gl::DECR_WRAP, gl::DECR_WRAP, gl::DECR_WRAP);
+            gl::StencilOpSeparate(gl::BACK, gl::INCR_WRAP, gl::INCR_WRAP, gl::INCR_WRAP);
 
             // gl::StencilFunc(gl::ALWAYS, 1, 0xFF);
             // gl::StencilMask(0xFF);
@@ -81,7 +83,7 @@ impl PathPainter for FillPathPainter {
 
             // Cover phase
             gl::ColorMask(gl::TRUE, gl::TRUE, gl::TRUE, gl::TRUE);
-            gl::StencilFunc(gl::LEQUAL, 1, 0xFF);
+            gl::StencilFunc(gl::LEQUAL, 1, 0x01);
             // TODO: replace with zero
             gl::StencilOp(gl::KEEP, gl::KEEP, gl::KEEP);
 
@@ -174,17 +176,61 @@ impl PathPainter for StrokePathPainter {
             gl::UseProgram(renderer.quad_curve_stroke_program);
             check_log_error();
 
-            gl::Uniform4f(3, 1.0, 0.0, 0.0, 1.0);
-            gl::Uniform1f(4, self.width);
+            let color_uniform_name = CString::new("color").expect("color uniform");
+            let width_uniform_name = CString::new("width").expect("width uniform");
+
+            let c0_uniform_name = CString::new("c0").expect("c0 uniform");
+            let c1_uniform_name = CString::new("c1").expect("c1 uniform");
+            let c2_uniform_name = CString::new("c2").expect("c2 uniform");
+
+            gl::Uniform4f(
+                gl::GetUniformLocation(
+                    renderer.quad_curve_stroke_program,
+                    color_uniform_name.as_ptr(),
+                ),
+                1.0,
+                0.0,
+                0.0,
+                1.0,
+            );
+            gl::Uniform1f(
+                gl::GetUniformLocation(
+                    renderer.quad_curve_stroke_program,
+                    width_uniform_name.as_ptr(),
+                ),
+                self.width,
+            );
 
             for (quad_curve, quad_curve_mesh) in self.quad_curve_meshes.iter() {
                 let c0 = quad_curve.c0;
                 let c1 = quad_curve.c1;
                 let c2 = quad_curve.c2;
 
-                gl::Uniform2f(0, c0.x, c0.y);
-                gl::Uniform2f(1, c1.x, c1.y);
-                gl::Uniform2f(2, c2.x, c2.y);
+                gl::Uniform2f(
+                    gl::GetUniformLocation(
+                        renderer.quad_curve_stroke_program,
+                        c0_uniform_name.as_ptr(),
+                    ),
+                    c0.x,
+                    c0.y,
+                );
+                gl::Uniform2f(
+                    gl::GetUniformLocation(
+                        renderer.quad_curve_stroke_program,
+                        c1_uniform_name.as_ptr(),
+                    ),
+                    c1.x,
+                    c1.y,
+                );
+                gl::Uniform2f(
+                    gl::GetUniformLocation(
+                        renderer.quad_curve_stroke_program,
+                        c2_uniform_name.as_ptr(),
+                    ),
+                    c2.x,
+                    c2.y,
+                );
+                check_log_error();
 
                 quad_curve_mesh.bind();
                 check_log_error();

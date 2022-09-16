@@ -59,8 +59,8 @@ impl Mesh {
 impl Drop for Mesh {
     fn drop(&mut self) {
         unsafe {
-            gl::DeleteBuffers(1, &self.buffer_name);
-            gl::DeleteVertexArrays(1, &self.vertex_array_object_name);
+            // gl::DeleteBuffers(1, &self.buffer_name);
+            // gl::DeleteVertexArrays(1, &self.vertex_array_object_name);
         }
     }
 }
